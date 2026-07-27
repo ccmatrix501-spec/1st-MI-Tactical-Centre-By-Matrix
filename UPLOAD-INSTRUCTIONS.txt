@@ -1,12 +1,55 @@
-1st M.I. Tactical Centre mobile web build v1.3.9
+1st M.I. Tactical Centre – Web build v1.4.7 (ready for GitHub)
 
-1. Extract this ZIP.
-2. Copy every extracted file and folder into your cloned GitHub repository folder.
-3. Choose Replace files when Windows asks.
-4. In GitHub Desktop, commit with: Fix mobile modifier menu and header
-5. Push origin.
-6. Wait for GitHub Pages to finish deploying.
-7. Open the site on your phone. The first v1.3.9 load clears the old cached version and reloads once automatically.
-8. Confirm Menu -> Quick Actions says "Mobile web build v1.3.9".
+WHAT IS IN THIS FOLDER
+----------------------
+- App.tsx          ← Updated source (ported from the latest desktop App.tsx)
+- version.txt
+- manifest.webmanifest
+- sw.js            (clears old caches so Pages always serves the new build)
+- index.html       (placeholder until you rebuild)
+- .nojekyll
+- _redirects
+- DEPLOY-INSTRUCTIONS.txt / UPLOAD-INSTRUCTIONS.txt
 
-The modifier window now has a fixed Done × button in the top-right and a Done button at the bottom.
+HOW TO UPDATE THE LIVE GITHUB PAGES SITE
+----------------------------------------
+1. Keep your existing assets/ folder exactly as it is
+   (maps, bugholes, markers, companies, mi3d GLBs, training-material, restriction-maps, icons, etc.).
+   The binary assets are NOT re-included here because they are large and already in your repo.
+
+2. Replace the previous React source (App.tsx or the equivalent entry component)
+   with the new App.tsx from this folder.
+
+3. Rebuild the web target the same way you produced the previous 1.4.6 static files
+   (Vite / your normal build command that outputs the hashed JS + CSS into assets/).
+
+4. Copy the newly generated files into the GitHub repo root / assets:
+   - the new index-*.js (and any CSS it needs)
+   - update index.html if your build regenerates it
+   - keep / overwrite the meta files from this package (version.txt, sw.js, manifest, etc.)
+
+5. Commit message example:
+   Web build v1.4.7 – desktop source port + mobile/web guards
+
+6. Push to origin and wait for GitHub Pages.
+
+7. First load after deploy will clear the old service-worker cache and reload once
+   (same behaviour as 1.4.6).
+
+WHAT CHANGED IN 1.4.7
+---------------------
+- Full logic, cert checklists, training material, 3D builder data and styles
+  taken from the latest desktop App.tsx you supplied.
+- WEB_BUILD_VERSION = "1.4.7"
+- isWeb detection so desktop-only APIs (steOverlay / steKeybinds / native folder picker)
+  are safely skipped in the browser.
+- Help text and footer now show the correct web/mobile instructions.
+- All previous mobile layout, touch controls and JSON save behaviour from the 1.4.6 web
+  build should continue to work once you rebuild with the same CSS / mobile adaptations
+  you already had.
+
+If your build pipeline already injects the mobile CSS and web-save polyfills,
+just swapping App.tsx and rebuilding is enough.
+
+After the new JS is live, open the site on phone and confirm the Menu → Quick Actions
+(or the footer) shows “Web build v1.4.7”.

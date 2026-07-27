@@ -1,34 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self' 'unsafe-inline' data: blob:; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:;"
-    />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#050607" />
-    <meta name="mi-build-version" content="1.4.6" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="1st M.I. Tactical Centre" />
-    <meta
-      name="description"
-      content="Mobile-friendly tactical maps, certifications, training materials, awards and 3D base planning for the 1st M.I."
-    />
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="icon" href="./icon.png" />
+    <meta name="description" content="1st M.I. Tactical Centre – maps, certifications, training & 3D base planning" />
+    <link rel="icon" href="./icon.ico" />
     <link rel="apple-touch-icon" href="./icon-192.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
     <title>1st M.I. Tactical Centre</title>
-    <script type="module" crossorigin src="./assets/index-D8SEAL-n.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DJKkv6Nr.css">
+    <style>
+      html, body, #root { height: 100%; margin: 0; background: #050607; color: #fff; }
+      body { display: grid; place-items: center; font-family: Arial, Helvetica, sans-serif; }
+      .boot { text-align: center; max-width: 420px; padding: 24px; }
+      .boot h1 { color: #1eff00; font-size: 1.4rem; margin: 0 0 12px; }
+      .boot p { opacity: 0.8; line-height: 1.45; }
+      .boot code { background: #111; padding: 2px 6px; border-radius: 4px; }
+    </style>
   </head>
   <body>
-    <noscript>This application requires JavaScript.</noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot">
+        <h1>1st M.I. Tactical Centre</h1>
+        <p>Web build <strong>v1.4.7</strong></p>
+        <p>
+          This is the source package. Replace your previous <code>App.tsx</code> with the one in this folder,
+          rebuild the web target (Vite / your existing pipeline), then copy the generated
+          <code>assets/index-*.js</code> + CSS into the live site root while keeping your existing
+          <code>assets/</code> (maps, markers, mi3d models, training images, icons).
+        </p>
+        <p>After rebuild, the real app will mount here.</p>
+      </div>
+    </div>
+    <script>
+      // Cache-busting helper used by previous builds
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations().then((regs) => {
+          regs.forEach((r) => r.unregister());
+        });
+      }
+    </script>
   </body>
 </html>

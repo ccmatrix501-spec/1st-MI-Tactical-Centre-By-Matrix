@@ -1,17 +1,18 @@
-1st M.I. Tactical Centre — READY-TO-HOST MOBILE WEBSITE
+1st M.I. Tactical Centre — READY-TO-HOST MOBILE WEBSITE (v1.4.7)
 
-This folder is the finished static website.
+This folder is intended as the web/mobile build.
 
-TO CREATE A PUBLIC WEB LINK:
-1. Extract this ZIP.
-2. Upload every file and folder inside it to a static website host.
-3. Open the URL supplied by that host.
+TO CREATE / UPDATE THE PUBLIC WEB LINK ON GITHUB PAGES:
+
+1. Copy every file and folder into your GitHub repository (keep existing assets/).
+2. Commit and push.
+3. GitHub Pages will serve index.html at the root.
 
 IMPORTANT:
 - Keep the folder structure unchanged.
 - index.html must remain at the website root.
-- The assets folder must be uploaded completely.
-- HTTPS is required by browsers for full installable-PWA/offline support.
+- The assets folder must be present and complete (maps, markers, 3D models, training images, etc.).
+- HTTPS is required for full PWA / offline behaviour.
 
 MOBILE:
 - Android/Chrome: browser menu → Install app / Add to Home screen.
@@ -19,5 +20,5 @@ MOBILE:
 
 WEB SAVE SYSTEM:
 - Exported saves download as JSON files.
-- Open Save Scanner and choose Import JSON Save to reopen them.
+- Use the Open / Import controls inside the matching Tactical Centre tab to reopen them.
 - The automatic Windows folder scanner and game overlay remain desktop-only.
