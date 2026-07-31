@@ -1,10 +1,10 @@
 1st M.I. Tactical Centre mobile web build v1.4.7
 
-1. Extract this ZIP (or use the files).
-2. Copy every extracted file and folder into your cloned GitHub repository folder.
-3. Choose Replace files when Windows asks.
-4. In GitHub Desktop, commit with: Update to mobile web build v1.4.7
-5. Push origin.
-6. Wait for GitHub Pages to finish deploying.
-7. Open the site on your phone. The first v1.4.7 load clears the old cached version and reloads once automatically.
-8. Confirm Menu → Quick Actions says "Mobile web build v1.4.7".
+1. Merge this package into your existing web repo (keep assets/).
+2. Overwrite version.txt, sw.js, manifest, index.html, instructions as needed.
+3. In GitHub Desktop, commit: Update to mobile web build v1.4.7
+4. Push origin.
+5. Wait for GitHub Pages to deploy.
+6. First load clears old cache and reloads once.
+7. Confirm Menu → Quick Actions shows "Mobile web build v1.4.7" after you also
+   string-replace 1.4.6 → 1.4.7 inside the main JS bundle.
