@@ -1,17 +1,9 @@
 /**
  * Discord Activity bootstrap for 1st M.I. Tactical Centre
- * 
- * Load this AFTER the Discord Embedded App SDK script.
- * It safely detects if the app is running inside Discord and
- * performs the authorize → token → authenticate flow.
- *
- * Usage in index.html (recommended order):
- *   1. Your normal app scripts
- *   2. <script type="module" src="/discord-activity.js"></script>
+ * Client ID: 1532302380237066271
  */
 
 (async function () {
-  // Only run inside Discord Activity iframe
   const isDiscord =
     window.location.hostname.includes("discordsays.com") ||
     window.location.search.includes("frame_id") ||
@@ -25,23 +17,15 @@
   console.log("[1st MI] Detected Discord Activity environment");
 
   try {
-    // Dynamic import so it doesn't break when loaded outside Discord
     const { DiscordSDK } = await import("https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@2/+esm");
 
-    // ⚠️ Replace this with your real Client ID from the Discord Developer Portal
     const CLIENT_ID = "1532302380237066271";
-
-    if (CLIENT_ID === "1532302380237066271") {
-      console.error("[1st MI] Please set your real Discord Client ID in discord-activity.js");
-      return;
-    }
 
     const discordSdk = new DiscordSDK(CLIENT_ID);
 
     await discordSdk.ready();
     console.log("[1st MI] Discord SDK ready");
 
-    // Request authorization
     const { code } = await discordSdk.commands.authorize({
       client_id: CLIENT_ID,
       response_type: "code",
@@ -50,7 +34,6 @@
       scope: ["identify", "guilds"],
     });
 
-    // Exchange code for access token via your Vercel API route
     const tokenRes = await fetch("/api/token", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -64,7 +47,6 @@
 
     const { access_token } = await tokenRes.json();
 
-    // Authenticate with Discord
     const auth = await discordSdk.commands.authenticate({ access_token });
 
     if (!auth) {
@@ -73,11 +55,9 @@
 
     console.log("[1st MI] Authenticated as:", auth.user?.username || "unknown");
 
-    // Make the SDK available globally if you want to use it later
     window.miDiscordSdk = discordSdk;
     window.miDiscordAuth = auth;
 
-    // Optional: dispatch a custom event so your app can react
     window.dispatchEvent(
       new CustomEvent("mi-discord-ready", {
         detail: { sdk: discordSdk, auth },
