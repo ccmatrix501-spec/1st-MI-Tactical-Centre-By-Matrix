@@ -1,8 +1,6 @@
 // Vercel Serverless Function – Discord OAuth token exchange
-// Place this file at: /api/token.js  in your Vercel project
 
 export default async function handler(req, res) {
-  // Allow CORS for Discord Activity iframe
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -51,7 +49,6 @@ export default async function handler(req, res) {
       return res.status(400).json(data);
     }
 
-    // Only return the access_token to the frontend
     return res.status(200).json({
       access_token: data.access_token,
     });
