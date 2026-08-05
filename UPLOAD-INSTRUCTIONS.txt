@@ -1,10 +1,14 @@
-1st M.I. Tactical Centre mobile web build v1.4.7
+1st M.I. Tactical Centre mobile web build v1.4.8
 
-1. Merge this package into your existing web repo (keep assets/).
-2. Overwrite version.txt, sw.js, manifest, index.html, instructions as needed.
-3. In GitHub Desktop, commit: Update to mobile web build v1.4.7
-4. Push origin.
-5. Wait for GitHub Pages to deploy.
-6. First load clears old cache and reloads once.
-7. Confirm Menu → Quick Actions shows "Mobile web build v1.4.7" after you also
-   string-replace 1.4.6 → 1.4.7 inside the main JS bundle.
+This package syncs the web Specialisation / Cert checklist wording
+so it matches the desktop App.tsx you provided.
+
+HOW TO APPLY
+1. Keep your existing assets/ folder (maps, markers, GLBs, icons, CSS).
+2. Overwrite:
+   assets/index-D8SEAL-n.js   ← with the file in this zip
+   version.txt
+3. Commit + push to GitHub Pages (or re-upload the site).
+4. Hard-refresh or open clear-cache.html once.
+
+Menu → Quick Actions will show "Mobile web build v1.4.8".
