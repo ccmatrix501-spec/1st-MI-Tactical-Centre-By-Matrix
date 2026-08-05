@@ -29,9 +29,9 @@
     const { DiscordSDK } = await import("https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@2/+esm");
 
     // ⚠️ Replace this with your real Client ID from the Discord Developer Portal
-    const CLIENT_ID = "1533657291549708298";
+    const CLIENT_ID = "1532302380237066271";
 
-    if (CLIENT_ID === "1533657291549708298") {
+    if (CLIENT_ID === "1532302380237066271") {
       console.error("[1st MI] Please set your real Discord Client ID in discord-activity.js");
       return;
     }
