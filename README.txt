@@ -1,17 +1,21 @@
-Settings tab patch for 1st M.I. Tactical Centre (web)
+1st M.I. Tactical Centre — Web v1.4.9
 
-WHAT CHANGED
-- Added "Settings" as a tab in the main navigation (same as desktop).
-- Clicking the Settings tab opens the existing Settings panel
-  (Colour Scheme, Company, Trainer Name, Save Folder, Keybinds).
+Rebuilt from your desktop App.tsx. Includes:
 
-INSTALL
-1. Overwrite on GitHub:
+- Full Settings tab (not just a modal)
+- Desktop setup tutorial (spotlight steps)
+- Specialisation + popup wording from desktop
+- Company "None" option and trainer/setup flow
+
+INSTALL ON GITHUB
+1. Keep ALL existing assets (maps, markers, mi3d, bugholes, companies, icons, etc.)
+2. Overwrite ONLY:
      assets/index-D8SEAL-n.js
      version.txt
-2. Commit + push
-3. Hard-refresh (Ctrl+Shift+R) or open clear-cache.html
+     index.html   (recommended — removes dependency on old CSS filename)
+3. Commit + push
+4. Open clear-cache.html or hard-refresh (Ctrl+Shift+R)
 
-NOTE
-This is a navigation patch. The full desktop interactive tutorial
-and setup spotlight system are not included (those need a source rebuild).
+IMPORTANT
+Do not delete your maps/markers/mi3d folders.
+This package only updates the app code + index.html.
