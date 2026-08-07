@@ -1,15 +1,17 @@
-1st M.I. Tactical Centre — Web Update v1.4.8
+Settings tab patch for 1st M.I. Tactical Centre (web)
 
-The full 150MB website ZIP did not upload into this environment.
-Use this drop-in on YOUR local full website folder.
+WHAT CHANGED
+- Added "Settings" as a tab in the main navigation (same as desktop).
+- Clicking the Settings tab opens the existing Settings panel
+  (Colour Scheme, Company, Trainer Name, Save Folder, Keybinds).
 
-INSTALL (on your computer)
-1. Unzip this file.
-2. Open your full website folder (the one with assets/maps, assets/markers, assets/mi3d, etc.).
-3. Overwrite:
+INSTALL
+1. Overwrite on GitHub:
      assets/index-D8SEAL-n.js
      version.txt
-4. Optional: also copy clear-cache.html and sw.js from this zip.
-5. Deploy / hard-refresh.
+2. Commit + push
+3. Hard-refresh (Ctrl+Shift+R) or open clear-cache.html
 
-Specialisation checklists + requirements popups match the desktop App.tsx.
+NOTE
+This is a navigation patch. The full desktop interactive tutorial
+and setup spotlight system are not included (those need a source rebuild).
