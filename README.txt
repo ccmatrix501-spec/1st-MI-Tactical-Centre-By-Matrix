@@ -1,22 +1,11 @@
-1st M.I. Tactical Centre — v1.4.7 package contents
-=================================================
+1st M.I. Tactical Centre — Web Update v1.4.8
 
-INCLUDED
-- App.tsx                 Desktop source you provided (reference only)
-- index.html              v1.4.7 shell + cache bust
-- version.txt             v1.4.7
-- sw.js                   service worker (cache disabled / always latest)
-- manifest.webmanifest
-- clear-cache.html
-- DEPLOY-INSTRUCTIONS.txt
-- UPLOAD-INSTRUCTIONS.txt
-- .nojekyll
-- _redirects
+Specialisation checklists + requirements popups matched to latest desktop App.tsx.
 
-NOT INCLUDED (must come from your previous web ZIP / GitHub repo)
-- assets/ folder (maps, markers, GLBs, icons, built JS/CSS)
-- icon.png, icon-192.png, icon-512.png, icon.ico
-- splash images
-
-Merge this ZIP with your existing assets folder, then upload the combined
-site to GitHub Pages.
+INSTALL
+1. Open your existing working website folder.
+2. Overwrite:
+     assets/index-D8SEAL-n.js
+     version.txt
+3. Keep all your other assets (maps, markers, GLBs, etc.).
+4. Deploy / hard-refresh (or open clear-cache.html once).
