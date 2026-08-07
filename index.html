@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#050607" />
+  <title>1st M.I. Tactical Centre</title>
+  <link rel="icon" href="./icon.png" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <style>
+    /* Live Dropship stats badge */
+    #mi-dropship-stats {
+      position: fixed;
+      top: 8px;
+      right: 8px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+      padding: 6px 10px;
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid #1eff00;
+      border-radius: 10px;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.25;
+      pointer-events: none;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.6);
+    }
+    #mi-dropship-stats .label {
+      color: #1eff00;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    #mi-dropship-stats .value {
+      font-size: 16px;
+      color: #fff;
+    }
+    #mi-dropship-stats .points {
+      font-size: 11px;
+      color: #a0a0a0;
+      font-weight: 600;
+    }
+    @media (max-width: 900px) {
+      #mi-dropship-stats {
+        top: auto;
+        bottom: calc(12px + env(safe-area-inset-bottom));
+        right: 10px;
+        left: auto;
+        font-size: 11px;
+      }
+      #mi-dropship-stats .value { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="mi-dropship-stats" aria-live="polite">
+    <span class="label">1st M.I. Dropships</span>
+    <span class="value" id="mi-dropship-count">—</span>
+    <span class="points" id="mi-dropship-points"></span>
+  </div>
+
+  <div id="root"></div>
+
+  <script>
+    (function () {
+      const STATS_URL = 'https://1st-mi-aar-production.up.railway.app/stats';
+      const countEl = document.getElementById('mi-dropship-count');
+      const pointsEl = document.getElementById('mi-dropship-points');
+
+      async function refreshStats() {
+        try {
+          const res = await fetch(STATS_URL, { cache: 'no-store' });
+          if (!res.ok) throw new Error('bad status');
+          const data = await res.json();
+          if (typeof data.totalDropships === 'number') {
+            countEl.textContent = data.totalDropships.toLocaleString();
+          }
+          if (typeof data.totalPoints === 'number') {
+            pointsEl.textContent = data.totalPoints.toLocaleString() + ' pts';
+          }
+        } catch (e) {
+          // keep last known value
+        }
+      }
+
+      refreshStats();
+      setInterval(refreshStats, 60000); // refresh every 60s
+    })();
+  </script>
+
+  <script type="module" crossorigin src="./assets/index-D8SEAL-n.js"></script>
+  <link rel="stylesheet" href="./assets/index-DJKkv6Nr.css" />
+</body>
+</html>
