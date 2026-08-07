@@ -7,6 +7,78 @@
   <title>1st M.I. Tactical Centre</title>
   <link rel="icon" href="./icon.png" />
   <link rel="manifest" href="./manifest.webmanifest" />
+  <style>
+    /* Force desktop look on web — overrides responsive collapses */
+    .brand, .brand-text {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      min-width: 0 !important;
+      overflow: visible !important;
+    }
+    .brand-text {
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+    }
+    .brand h1, .brand-text h1 {
+      display: block !important;
+      max-width: none !important;
+      margin: 0 !important;
+      overflow: visible !important;
+      text-overflow: unset !important;
+      white-space: nowrap !important;
+      font-size: 15px !important;
+      line-height: 1.15 !important;
+      color: var(--accent, #1eff00) !important;
+    }
+    .brand p, .brand-text p {
+      display: block !important;
+      margin: 0 !important;
+      font-size: 11px !important;
+      opacity: 0.85 !important;
+      white-space: nowrap !important;
+    }
+
+    /* Toolbar pills like desktop */
+    .toolbar .btn,
+    .toolbar button,
+    .map-page .toolbar button {
+      border-radius: 999px !important;
+      padding: 6px 12px !important;
+      min-height: 32px !important;
+    }
+
+    /* Ore / Gas side-by-side */
+    .resource-row {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 12px !important;
+      align-items: end !important;
+    }
+    .resource-row label {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 4px !important;
+    }
+
+    /* Squad checklist — clean vertical list */
+    .check-item,
+    .squad-check-list label,
+    aside label {
+      display: flex !important;
+      align-items: flex-start !important;
+      gap: 8px !important;
+      margin: 4px 0 !important;
+      white-space: normal !important;
+    }
+
+    /* Operation action buttons */
+    .card .btn,
+    .header-actions .btn {
+      border-radius: 10px !important;
+    }
+  </style>
 </head>
 <body>
   <div id="root"></div>
