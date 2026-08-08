@@ -4404,11 +4404,11 @@ Instant Fail Reminders:
         }
 
         .bottom-credit {
-          position: fixed !important;
-          right: 8px !important;
+          position: relative !important;
+          right: auto !important;
           left: auto !important;
-          bottom: 32px !important;
-          z-index: 9999 !important;
+          bottom: auto !important;
+          z-index: 1 !important;
           width: auto !important;
           max-width: 420px !important;
           max-height: 30px !important;
