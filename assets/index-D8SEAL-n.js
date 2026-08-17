@@ -4363,9 +4363,29 @@ Instant Fail Reminders:
         textarea,
         summary {
           border: 1px solid var(--accent) !important;
+          background: #050607 !important;
+          color: #ffffff !important;
+          border-radius: 10px !important;
+          padding: 8px 10px !important;
           box-shadow:
             inset 0 1px 0 rgba(255, 255, 255, 0.16),
             inset 0 -2px 6px rgba(0, 0, 0, 0.7) !important;
+        }
+        input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+        textarea,
+        select {
+          background: #050607 !important;
+          color: #ffffff !important;
+          border: 1px solid var(--accent) !important;
+          border-radius: 10px !important;
+          caret-color: #ffffff !important;
+        }
+        input::placeholder, textarea::placeholder {
+          color: rgba(255, 255, 255, 0.45) !important;
+        }
+        select option {
+          background: #111 !important;
+          color: #fff !important;
         }
 
         select {
@@ -6294,25 +6314,21 @@ Instant Fail Reminders:
         }
 
 
-        /* ==== MOBILE TOPBAR + LAYOUT (must be last) ==== */
         @media (min-width: 901px) {
           .mobile-menu-btn, .mobile-only-reset { display: none !important; }
           .topbar-row { display: contents !important; }
-          .desktop-only { display: flex !important; }
+          .desktop-only { display: flex !important; gap: 6px !important; }
         }
         @media (max-width: 900px), (pointer: coarse) {
           .desktop-only { display: none !important; }
           .topbar {
             display: flex !important;
             flex-direction: column !important;
-            flex-wrap: nowrap !important;
             align-items: stretch !important;
             gap: 0 !important;
             padding: calc(8px + env(safe-area-inset-top, 0px)) 12px 10px !important;
             overflow: visible !important;
             height: auto !important;
-            min-height: 0 !important;
-            max-height: none !important;
           }
           .topbar-row {
             display: flex !important;
@@ -6322,126 +6338,53 @@ Instant Fail Reminders:
             width: 100% !important;
             gap: 10px !important;
           }
-          .brand {
-            display: flex !important;
-            align-items: center !important;
-            gap: 8px !important;
-            min-width: 0 !important;
-            flex: 1 1 auto !important;
-            overflow: visible !important;
-          }
-          .brand-text {
-            min-width: 0 !important;
-            overflow: visible !important;
-          }
+          .brand { display: flex !important; align-items: center !important; gap: 8px !important; min-width: 0 !important; flex: 1 1 auto !important; }
           .brand-text h1, .brand h1 {
-            font-size: 15px !important;
-            line-height: 1.25 !important;
-            white-space: normal !important;
-            max-width: none !important;
-            overflow: visible !important;
-            text-overflow: clip !important;
+            font-size: 15px !important; line-height: 1.25 !important; white-space: normal !important;
+            max-width: none !important; overflow: visible !important; text-overflow: clip !important;
           }
           .brand-text p, .brand p { display: none !important; }
           .mobile-menu-btn {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            flex: 0 0 auto !important;
-            min-height: 42px !important;
-            padding: 8px 16px !important;
-            border-radius: 999px !important;
-            border: 2px solid var(--accent, #1eff00) !important;
+            display: inline-flex !important; align-items: center !important; justify-content: center !important;
+            flex: 0 0 auto !important; min-height: 42px !important; padding: 8px 16px !important;
+            border-radius: 999px !important; border: 2px solid var(--accent, #1eff00) !important;
             background: linear-gradient(180deg, #39ff14 0%, #0c9c00 100%) !important;
-            color: #000 !important;
-            font-weight: 900 !important;
-            font-size: 15px !important;
-            cursor: pointer !important;
-            white-space: nowrap !important;
+            color: #000 !important; font-weight: 900 !important; font-size: 15px !important; cursor: pointer !important;
           }
-          /* Hide tab strip until Menu opens — kills vertical green bars */
           .tabs, .header-tabs {
-            display: none !important;
-            flex: none !important;
-            width: 100% !important;
-            min-width: 0 !important;
-            max-width: 100% !important;
-            overflow: visible !important;
-            flex-wrap: wrap !important;
-            gap: 8px !important;
+            display: none !important; flex: none !important; width: 100% !important;
+            overflow: visible !important; flex-wrap: wrap !important; gap: 8px !important;
             padding: 10px 0 2px !important;
-            order: 5 !important;
           }
-          .topbar.mobile-menu-open .tabs,
-          .tabs.tabs-open {
-            display: flex !important;
-          }
+          .topbar.mobile-menu-open .tabs, .tabs.tabs-open { display: flex !important; }
           .tabs .btn, .tabs button, .header-tabs .btn, .header-tabs button {
-            flex: 1 1 calc(50% - 8px) !important;
-            min-width: calc(50% - 8px) !important;
-            max-width: none !important;
-            width: auto !important;
-            min-height: 44px !important;
-            height: auto !important;
-            padding: 10px 12px !important;
-            font-size: 13px !important;
-            white-space: normal !important;
-            overflow: visible !important;
-            text-overflow: clip !important;
-            border-radius: 999px !important;
-            text-align: center !important;
+            flex: 1 1 calc(50% - 8px) !important; min-width: calc(50% - 8px) !important;
+            max-width: none !important; min-height: 44px !important; height: auto !important;
+            padding: 10px 12px !important; font-size: 13px !important; white-space: normal !important;
+            overflow: visible !important; text-overflow: clip !important; border-radius: 999px !important;
           }
-          .mobile-only-reset {
-            display: inline-flex !important;
-            flex: 1 1 100% !important;
-            min-width: 100% !important;
-          }
+          .mobile-only-reset { display: inline-flex !important; flex: 1 1 100% !important; min-width: 100% !important; }
           .header-actions { display: none !important; }
-          .app {
-            height: 100dvh !important;
-            display: flex !important;
-            flex-direction: column !important;
-            overflow: hidden !important;
-          }
+          .app { height: 100dvh !important; display: flex !important; flex-direction: column !important; overflow: hidden !important; }
           .app-body, .scroll-page {
-            flex: 1 1 auto !important;
-            min-height: 0 !important;
-            overflow-y: auto !important;
+            flex: 1 1 auto !important; min-height: 0 !important; overflow-y: auto !important;
             padding: 10px 12px 96px !important;
           }
           .two-panel, .map-grid {
-            display: flex !important;
-            flex-direction: column !important;
-            height: auto !important;
-            max-height: none !important;
-            overflow: visible !important;
-            grid-template-columns: 1fr !important;
-            gap: 12px !important;
-            width: 100% !important;
+            display: flex !important; flex-direction: column !important; height: auto !important;
+            max-height: none !important; overflow: visible !important; grid-template-columns: 1fr !important;
+            gap: 12px !important; width: 100% !important;
           }
-          .two-panel > aside, .two-panel > main,
-          .map-grid > aside, .map-grid > main {
-            width: 100% !important;
-            max-width: 100% !important;
-            height: auto !important;
-            max-height: none !important;
-            overflow: visible !important;
-            flex: 0 0 auto !important;
+          .two-panel > aside, .two-panel > main, .map-grid > aside, .map-grid > main {
+            width: 100% !important; max-width: 100% !important; height: auto !important;
+            max-height: none !important; overflow: visible !important; flex: 0 0 auto !important;
           }
           .grid-two, .cert-checklist-grid { grid-template-columns: 1fr !important; }
           input[type="checkbox"] {
-            -webkit-appearance: checkbox !important;
-            appearance: checkbox !important;
-            width: 22px !important;
-            height: 22px !important;
-            min-width: 22px !important;
-            max-width: 22px !important;
-            flex: 0 0 auto !important;
+            -webkit-appearance: checkbox !important; appearance: checkbox !important;
+            width: 22px !important; height: 22px !important; min-width: 22px !important; max-width: 22px !important;
+            flex: 0 0 auto !important; background: transparent !important;
           }
-          label.row {
-            display: flex !important;
-            flex-direction: row !important;
-            align-items: center !important;
-          }
+          label.row { display: flex !important; flex-direction: row !important; align-items: center !important; }
         }
       `}),f.jsxs("header",{className:"topbar"+(m?" mobile-menu-open":""),"data-tutorial":"topbar",children:[f.jsxs("div",{className:"topbar-row",children:[f.jsxs("div",{className:"brand","data-tutorial":"topbar-brand",title:"Matrix's 1st M.I. Tactical Centre",children:[f.jsx("img",{src:f9,alt:"",onClick:he,className:"app-logo secret-logo-click",title:"Matrix's 1st M.I. Tactical Centre",draggable:!1}),Ve!=="None"?f.jsx("img",{src:So(c6[Ve]),alt:Ve+" Company",className:"topbar-company-icon",draggable:!1}):null,f.jsxs("div",{className:"brand-text",children:[f.jsx("h1",{children:"Matrix's 1st M.I. Tactical Centre"}),f.jsx("p",{children:"Maps, OPs, Certs & Merits/Awards"})]})]}),f.jsx("button",{type:"button",className:"mobile-menu-btn",onClick:()=>y(P=>!P),children:m?"Menu ✕":"Menu"})]}),f.jsxs("nav",{className:"tabs"+(m?" tabs-open":""),"data-tutorial":"topbar-tabs",children:[hd.map(P=>f.jsx(Ne,{active:i===P.id,onClick:()=>s(P.id),children:P.label},P.id)),f.jsx(Ne,{className:"mobile-only-reset",onClick:()=>{y(!1),T()},children:"New / Reset"})]}),f.jsxs("div",{className:"header-actions desktop-only","data-tutorial":"topbar-actions",children:[f.jsx(Ne,{onClick:T,children:"New / Reset"}),h?f.jsx(Ne,{onClick:S,children:"Unlock Editing"}):null]})]}),f.jsx("section",{className:"app-body","data-tutorial":"app-body",children:Be}),i!=="settings"?f.jsxs("div",{className:"corner-controls","data-tutorial":"corner-controls",children:[f.jsx("button",{type:"button",className:"corner-btn",onClick:()=>{_(0),p(!0),s("settings")},children:"Tutorial"}),f.jsx("button",{type:"button",className:"corner-btn",onClick:()=>x(!0),children:"Help"})]}):null,u?f.jsx("div",{className:"help-panel",children:f.jsxs("div",{className:"help-card",children:[f.jsxs("div",{className:"help-title",children:[f.jsx("h2",{children:"Help"}),f.jsx("button",{type:"button",className:"help-close",onClick:()=>x(!1),children:"×"})]}),f.jsxs("p",{children:[f.jsx("b",{children:"Alt + 2:"})," Toggle overlay."]}),f.jsxs("p",{children:[f.jsx("b",{children:"Mouse wheel:"})," Zoom map."]}),f.jsxs("p",{children:[f.jsx("b",{children:"Click + drag:"})," Move map when zoomed in."]}),f.jsxs("p",{children:[f.jsx("b",{children:"Reset View:"})," Resets zoom and map position."]}),f.jsxs("p",{children:[f.jsx("b",{children:"Clear Level:"})," Clears markers on the current map level."]}),f.jsxs("p",{children:[f.jsx("b",{children:"Reset Tac Map:"})," Clears the full Tac Map tab."]}),f.jsxs("p",{children:[f.jsx("b",{children:"Open Save / Export Save:"})," Load or write operation saves."]})]})}):null,g?(()=>{var Me;const P=bs[b]||bs[0],te=()=>{try{localStorage.setItem(hx,"true")}catch{}},L=()=>{b>=4&&te(),p(!1)},ae=Y=>{var C;const ge=Math.max(0,Math.min(bs.length-1,Y));ge>=4&&te(),_(ge);const Q=(C=bs[ge])==null?void 0:C.tab;Q&&s(Q)},ve=v;return f.jsxs("div",{className:"tutorial-root",children:[ve?f.jsx("div",{className:"tutorial-spotlight",style:{top:ve.top+"px",left:ve.left+"px",width:ve.width+"px",height:ve.height+"px"}}):f.jsx("div",{className:"tutorial-spotlight-fallback"}),f.jsxs("div",{className:"tutorial-card",children:[f.jsxs("div",{className:"help-title",children:[f.jsxs("h2",{children:["Tutorial (",b+1," / ",bs.length,")"]}),f.jsx("button",{type:"button",className:"help-close",onClick:L,children:"×"})]}),f.jsxs("div",{className:"tutorial-tab-hint",children:["Viewing: ",f.jsx("strong",{children:((Me=hd.find(Y=>Y.id===(P.tab||"map")))==null?void 0:Me.label)||"Tac Map"})]}),f.jsx("h3",{className:"tutorial-step-title",children:P.title}),f.jsx("div",{className:"tutorial-step-body",children:P.body.map((Y,ge)=>f.jsx("p",{children:Y},ge))}),f.jsxs("div",{className:"tutorial-actions",children:[f.jsx(Ne,{disabled:b===0,onClick:()=>ae(b-1),children:"Previous"}),f.jsx(Ne,{onClick:L,children:"Close"}),b<bs.length-1?f.jsx(Ne,{onClick:()=>ae(b+1),children:"Next"}):f.jsx(Ne,{onClick:L,children:"Finish"})]})]})]})})():null,f.jsxs("div",{className:"bottom-credit",children:["Made and coded by Matrix for the 1st M.I.",f.jsx("br",{}),"Tested by PurpleWolf, Cobber, Tina and Matrix",f.jsx("br",{}),"Contact Matrix, Tina or Purplewolf on Discord.",f.jsx("br",{}),"Discord.gg/1stMI"]})]})}N3(document.getElementById("root")).render(f.jsx(i2.StrictMode,{children:f.jsx(U4,{})}));
