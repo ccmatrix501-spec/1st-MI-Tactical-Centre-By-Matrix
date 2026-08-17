@@ -7,7 +7,7 @@
   <style>body{font-family:system-ui;background:#050607;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}.box{text-align:center;padding:2rem;border:1px solid #1eff00;border-radius:12px}</style>
 </head>
 <body>
-  <div class="box"><h1>Clearing cache…</h1></div>
+  <div class="box"><h1>Clearing cache…</h1><p>Reloading…</p></div>
   <script>
     (async()=>{try{if('serviceWorker'in navigator){for(const r of await navigator.serviceWorker.getRegistrations())await r.unregister()}if('caches'in window){for(const k of await caches.keys())await caches.delete(k)}}catch(e){}location.href='./?v='+Date.now()})();
   </script>
