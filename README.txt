@@ -1,12 +1,15 @@
-v1.6.8 — Restored desktop look + mobile Menu
+v1.7.0 — Discord export enabled (same as desktop)
 
-Desktop:
-- Dark text boxes again (not white)
-- Full tab bar + New/Reset as before
-- Green themed inputs/selects
+How it works:
+- Export Save opens the Discord export modal
+- Download .JSON to device always works
+- Send to Discord uses the Railway bot API
+  https://1st-mi-matrix-r-d-production.up.railway.app
 
-Mobile:
-- Menu button top bar
-- Single column cert layout
+Channels (same as desktop):
+- Demon / Nightmare / Cerberus / Hellfire SL/PL reports
+- Training / other reports
 
-INSTALL then clear-cache.html
+Pick channel → load threads → send JSON + notes to the thread.
+
+Install: overwrite index.html + assets + version.txt, then clear-cache.html
