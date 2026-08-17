@@ -1,20 +1,16 @@
-v1.6.4 — Complete mobile layout fix
+v1.6.5 — Mobile layout matched to your reference
 
-Fixes on phones:
-- Cert / Spec / Merits: stacks to ONE column (Details under Checklist)
-- No more crushed right-hand strip
-- Tutorial/Help no longer cover Instant Fails (extra bottom padding)
-- 3D Builder panels stack instead of overlapping
-- Requirements modals scroll fully
-- Checkboxes still normal
-- Cert sections 1,2,3... order
-- Discord export script included
+Reference match (PL Cert style):
+- Single full-width column (Checklist → Instant Fails → Mulligans → Details)
+- No crushed right-hand strip
+- Full Instant Fails text + normal checkboxes
+- Extra bottom padding so Tutorial/Help don't cover content
+- Desktop still uses two-column layout (≥901px)
 
-INSTALL on GitHub Pages:
+INSTALL:
   index.html
   assets/index-D8SEAL-n.js
   assets/index-DJKkv6Nr.css
-  discord-export.js (if present)
   version.txt
 
-Then open clear-cache.html on your phone (critical).
+On phone open clear-cache.html then check PL Cert.

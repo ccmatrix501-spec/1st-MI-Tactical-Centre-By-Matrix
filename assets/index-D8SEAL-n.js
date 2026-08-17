@@ -4017,30 +4017,163 @@ Instant Fail Reminders:
           overflow: hidden !important;
         }
 
-        .two-panel {
-          height: 100% !important;
-          max-height: 100% !important;
-          min-height: 0 !important;
-          overflow: hidden !important;
-          display: grid !important;
-          grid-template-columns: 320px 1fr !important;
-          gap: 14px !important;
+        @media (min-width: 901px) {
+          .two-panel {
+            height: 100% !important;
+            max-height: 100% !important;
+            min-height: 0 !important;
+            overflow: hidden !important;
+            display: grid !important;
+            grid-template-columns: 320px 1fr !important;
+            gap: 14px !important;
+          }
+          .two-panel > aside {
+            min-height: 0 !important;
+            max-height: 100% !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            padding-right: 6px !important;
+          }
+          .two-panel > main {
+            min-height: 0 !important;
+            max-height: 100% !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            padding-right: 6px !important;
+          }
         }
 
-        .two-panel > aside {
-          min-height: 0 !important;
-          max-height: 100% !important;
-          overflow-y: auto !important;
-          overflow-x: hidden !important;
-          padding-right: 6px !important;
-        }
-
-        .two-panel > main {
-          min-height: 0 !important;
-          max-height: 100% !important;
-          overflow-y: auto !important;
-          overflow-x: hidden !important;
-          padding-right: 6px !important;
+        @media (max-width: 900px), (pointer: coarse) {
+          html, body, #root {
+            height: 100% !important;
+            overflow: hidden !important;
+          }
+          .app {
+            height: 100dvh !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+          }
+          .topbar, .app-header {
+            flex: 0 0 auto !important;
+            flex-wrap: wrap !important;
+          }
+          .brand h1 {
+            font-size: 13px !important;
+            max-width: 140px !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+          }
+          .brand p { display: none !important; }
+          .tabs {
+            display: flex !important;
+            flex: 1 1 100% !important;
+            order: 3 !important;
+            overflow-x: auto !important;
+            gap: 6px !important;
+            width: 100% !important;
+            -webkit-overflow-scrolling: touch;
+          }
+          .tabs .btn {
+            flex: 0 0 auto !important;
+            white-space: nowrap !important;
+            min-height: 40px !important;
+            font-size: 12px !important;
+            padding: 8px 12px !important;
+          }
+          .app-body, .scroll-page {
+            flex: 1 1 auto !important;
+            min-height: 0 !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            padding: 10px 12px 96px !important;
+            height: auto !important;
+            max-height: none !important;
+          }
+          .two-panel, .map-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            height: auto !important;
+            max-height: none !important;
+            min-height: 0 !important;
+            overflow: visible !important;
+            gap: 12px !important;
+            width: 100% !important;
+            grid-template-columns: 1fr !important;
+          }
+          .two-panel > aside,
+          .two-panel > main,
+          .map-grid > aside,
+          .map-grid > main {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+            position: relative !important;
+            flex: 0 0 auto !important;
+            padding-right: 0 !important;
+          }
+          .card {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+          .grid-two, .cert-checklist-grid {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+          }
+          .corner-controls {
+            position: fixed !important;
+            left: 10px !important;
+            bottom: 12px !important;
+            z-index: 30 !important;
+          }
+          .mi3d-bottom-toolbar,
+          .mi3d-help,
+          .mi3d-selected-readout {
+            position: relative !important;
+            left: auto !important;
+            right: auto !important;
+            bottom: auto !important;
+            width: 100% !important;
+          }
+          .driller-requirements-popup {
+            width: min(96vw, 520px) !important;
+            max-height: 88dvh !important;
+            overflow-y: auto !important;
+          }
+          input:not([type="checkbox"]):not([type="radio"]),
+          select, textarea {
+            width: 100% !important;
+            min-height: 44px !important;
+            font-size: 16px !important;
+            box-sizing: border-box !important;
+          }
+          .btn, button {
+            min-height: 44px !important;
+            font-size: 14px !important;
+          }
+          input[type="checkbox"] {
+            -webkit-appearance: checkbox !important;
+            appearance: checkbox !important;
+            width: 22px !important;
+            height: 22px !important;
+            min-width: 22px !important;
+            min-height: 22px !important;
+            max-width: 22px !important;
+            flex: 0 0 auto !important;
+            margin: 0 10px 0 0 !important;
+            padding: 0 !important;
+          }
+          label.row {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 10px !important;
+            width: 100% !important;
+          }
         }
 
         .grid-two {
@@ -5034,50 +5167,6 @@ Instant Fail Reminders:
         .settings-keybind-stack { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
         .settings-keybind-actions { display: flex; flex-wrap: wrap; gap: 10px; }
         .settings-tutorial-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-        
-        /* MOBILE COMPLETE LAYOUT FIX */
-        @media (max-width: 900px), (pointer: coarse) {
-          .two-panel, .map-grid {
-            display: flex !important;
-            flex-direction: column !important;
-            grid-template-columns: 1fr !important;
-            width: 100% !important;
-            height: auto !important;
-            gap: 12px !important;
-            overflow: visible !important;
-          }
-          .two-panel > aside,
-          .two-panel > main,
-          .map-grid > aside,
-          .map-grid > main {
-            width: 100% !important;
-            max-width: 100% !important;
-            min-width: 0 !important;
-            height: auto !important;
-            max-height: none !important;
-            overflow: visible !important;
-            position: relative !important;
-            flex: none !important;
-          }
-          .app-body {
-            overflow-y: auto !important;
-            padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important;
-          }
-          .grid-two, .cert-checklist-grid {
-            grid-template-columns: 1fr !important;
-          }
-          .mi3d-bottom-toolbar {
-            position: relative !important;
-            left: auto !important;
-            right: auto !important;
-            bottom: auto !important;
-          }
-          .driller-requirements-popup {
-            width: min(96vw, 520px) !important;
-            max-height: 90dvh !important;
-            overflow-y: auto !important;
-          }
-        }
         @media (max-width: 1100px) { .settings-grid { grid-template-columns: 1fr; } }
 
         .tutorial-root { position: fixed; inset: 0; z-index: 10010; pointer-events: none; }
