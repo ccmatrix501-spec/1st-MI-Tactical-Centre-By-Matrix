@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "syncRevision": 1,
+  "updatedAt": "2026-09-16T13:05:00.000Z",
+  "certifications": [
+    {
+      "id": "cert-squad",
+      "name": "Squad Certification",
+      "code": "SQUAD",
+      "description": "Cloud editor record for Squad Certification.",
+      "passScore": 34,
+      "questions": []
+    },
+    {
+      "id": "cert-pl",
+      "name": "Platoon Leader Certification",
+      "code": "PL",
+      "description": "Cloud editor record for Platoon Leader Certification.",
+      "passScore": 0,
+      "questions": []
+    },
+    {
+      "id": "cert-builder",
+      "name": "Builder Certification",
+      "code": "BUILDER",
+      "description": "Cloud editor record for Builder Certification.",
+      "passScore": 0,
+      "questions": []
+    }
+  ],
+  "specialisations": [],
+  "maps": [],
+  "merits": [],
+  "awards": []
+}
