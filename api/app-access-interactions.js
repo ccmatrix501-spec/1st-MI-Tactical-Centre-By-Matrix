@@ -79,7 +79,7 @@ function allowedRoleIds() {
 function hasAppAccess(interaction) {
   if (hasManageGuild(interaction)) return true;
   const allowed = allowedRoleIds();
-  if (!allowed.length) return false;
+  if (!allowed.length) return true;
   const roles = new Set(Array.isArray(interaction?.member?.roles) ? interaction.member.roles.map(String) : []);
   return allowed.some((id) => roles.has(id));
 }
@@ -117,6 +117,7 @@ function generateKey(interaction) {
     v: 1,
     u: userId,
     g: guildId,
+    c: channelId,
     i: now,
     e: now + lifetimeSeconds(),
     n: crypto.randomBytes(12).toString("base64url")
@@ -131,7 +132,7 @@ function panelData() {
   const count = allowedRoleIds().length;
   const rule = count
     ? "Access is controlled by " + count + " configured Discord role" + (count === 1 ? "." : "s.")
-    : "Access roles are not configured yet. Only members with Manage Server/Administrator can generate a key.";
+    : "Access is controlled by this Discord thread. Anyone who can use this panel can generate a key.";
 
   return {
     embeds: [{
@@ -176,7 +177,7 @@ function checkAccess(interaction) {
   if (hasAppAccess(interaction)) return ephemeral("✅ You currently have Tactical Centre app access.");
 
   if (!allowedRoleIds().length) {
-    return ephemeral("❌ App access roles are not configured yet. Set **APP_ACCESS_ALLOWED_ROLE_IDS** first.");
+    return ephemeral("❌ This Discord thread does not currently grant you Tactical Centre access.");
   }
 
   return ephemeral("❌ You do not currently have a Discord role that grants Tactical Centre app access.");
@@ -187,7 +188,7 @@ function generateAccess(interaction) {
 
   if (!hasAppAccess(interaction)) {
     if (!allowedRoleIds().length) {
-      return ephemeral("❌ App access roles are not configured yet. Set **APP_ACCESS_ALLOWED_ROLE_IDS** first.");
+      return ephemeral("❌ This Discord thread does not currently grant you Tactical Centre access.");
     }
     return ephemeral("❌ You do not currently have a Discord role that is allowed to generate a Tactical Centre key.");
   }
