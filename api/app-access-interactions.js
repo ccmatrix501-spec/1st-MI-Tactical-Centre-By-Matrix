@@ -137,7 +137,7 @@ function panelData() {
     embeds: [{
       title: "1st M.I. Tactical Centre — App Access",
       description:
-        "Generate your personal Tactical Centre access key here.\\n\\n" +
+        "Generate your personal Tactical Centre access key here.\n\n" +
         "The key is created by the bot, tied to your Discord account and this server, and shown only to you.",
       color: 5793266,
       fields: [
@@ -195,9 +195,9 @@ function generateAccess(interaction) {
   try {
     const generated = generateKey(interaction);
     return ephemeral(
-      "🔑 **Your Tactical Centre access key**\\n" +
-      "\`\`\`\\n" + generated.key + "\\n\`\`\`\\n" +
-      "Expires: <t:" + generated.expires + ":F>\\n\\n" +
+      "🔑 **Your Tactical Centre access key**\n" +
+      "```\n" + generated.key + "\n```\n" +
+      "Expires: <t:" + generated.expires + ":F>\n\n" +
       "Keep this private. The desktop app will use it to verify your Discord access."
     );
   } catch (error) {
