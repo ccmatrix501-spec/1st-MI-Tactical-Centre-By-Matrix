@@ -1,7 +1,7 @@
-const ACTIVITY_BUILD = "1.9.0";
+const ACTIVITY_BUILD = "desktop-web-sync";
 const API_BASE = "https://1st-mi-matrix-r-d-production.up.railway.app";
 const REQUIRED_GUILD_ID = "1256977709884641382";
-const MAIN_APP_SRC = "./assets/index-D8SEAL-n.js?v=1.9.0";
+const MAIN_APP_SRC = String(window.__TACTICAL_MAIN_BUNDLE__ || "./assets/app.js");
 const SDK_MODULE =
   "https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@2.5.0/+esm";
 
@@ -296,6 +296,10 @@ async function authenticateActivity() {
   if (!accessToken) {
     throw new Error("Discord Activity authentication did not return a token.");
   }
+
+  // Keep the token in memory only for authenticated Activity API calls.
+  // It is never written to localStorage/sessionStorage.
+  window.miDiscordAccessToken = accessToken;
 
   const auth = await discordSdk.commands.authenticate({
     access_token: accessToken
