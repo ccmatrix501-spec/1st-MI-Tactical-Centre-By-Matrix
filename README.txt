@@ -1,4 +1,4 @@
-v1.8.0 — Discord Activity + desktop Discord routing sync
+v1.8.1 — Discord Activity + desktop Discord routing sync
 
 Current web/Discord Activity changes:
 - Discord Activity bootstrap is loaded before the Tactical Centre app.
