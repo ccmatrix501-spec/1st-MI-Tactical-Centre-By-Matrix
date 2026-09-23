@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const ACTIVITY_BUILD = "1.8.0";
+  const ACTIVITY_BUILD = "1.8.1";
 
   function getParam(name) {
     try {
