@@ -1,25 +1,27 @@
-v1.8.1 — Discord Activity + desktop Discord routing sync
+v1.9.0 — Guild-locked Discord Activity access
 
-Current web/Discord Activity changes:
-- Discord Activity bootstrap is loaded before the Tactical Centre app.
-- Detects Discord iframe/activity context and exposes Activity metadata.
-- Discord export forum list matches the current desktop routing.
-- Hell Hound certifications (HLL:V) forum is available.
-- Builder certifications default to Build reports.
-- Squad / PL / company certification exports default to the matching company forum when metadata is available.
-- Static bundle is cache-busted as v1.8.0.
+Discord Activity access:
+- Activity launches are accepted only from 1st M.I. guild 1256977709884641382.
+- DM launches and launches from any other Discord server are denied.
+- The Activity authenticates the current Discord user before loading the Tactical Centre.
+- The Railway bot verifies that user is a current member of the 1st M.I. server.
+- Admin access is granted to roles 1257030835542949939 and 1418416362136670388.
+- User 295215176372846592 has explicit full admin access.
+- The legacy shareable web admin-key panel is disabled.
 
-Discord export uses the Railway bot API:
-https://1st-mi-matrix-r-d-production.up.railway.app
+OAuth:
+- Railway uses TACTICAL_ACTIVITY_APPLICATION_ID for the Activity application.
+- Preferred: set TACTICAL_ACTIVITY_CLIENT_SECRET in Railway.
+- PKCE public-client exchange is also supported when the Discord application has Public Client enabled.
 
-Available report forums:
-- Demon SL/PL reports
-- Nightmare SL/PL reports
-- Cerberus SL/PL reports
-- Hellfire SL/PL reports
+Web browser version:
+- Direct browser access continues to load the normal web Tactical Centre.
+- The guild lock applies specifically when the page is running as a Discord Activity.
+
+Discord export routing:
+- Demon / Nightmare / Cerberus / Hellfire report forums
 - Build reports
 - Hell Hound certifications (HLL:V)
 
-Deployment:
-- GitHub Pages serves index.html and assets/ directly.
-- Open clear-cache.html once if a browser or Discord client keeps an older cached build.
+Railway API:
+https://1st-mi-matrix-r-d-production.up.railway.app
