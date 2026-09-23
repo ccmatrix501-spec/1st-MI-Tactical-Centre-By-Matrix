@@ -833,33 +833,92 @@
     return response.json();
   }
 
-  function authoritativeLiveEditSnapshot(value) {
+  function normaliseLiveEditSnapshot(value) {
+    return {
+      tabLabels:
+        value?.tabLabels && typeof value.tabLabels === "object"
+          ? value.tabLabels
+          : {},
+      certs:
+        value?.certs && typeof value.certs === "object"
+          ? value.certs
+          : {},
+      customTabs: Array.isArray(value?.customTabs)
+        ? value.customTabs
+        : [],
+      tabSettings:
+        value?.tabSettings && typeof value.tabSettings === "object"
+          ? value.tabSettings
+          : {},
+      tabOrder: Array.isArray(value?.tabOrder)
+        ? value.tabOrder
+        : [],
+      elementOverrides:
+        value?.elementOverrides &&
+        typeof value.elementOverrides === "object"
+          ? value.elementOverrides
+          : {},
+    };
+  }
+
+  function liveEditSnapshotForStorage(version, value) {
     if (!value || typeof value !== "object") return null;
+
+    const snapshotKeys = [
+      "tabLabels",
+      "certs",
+      "customTabs",
+      "tabSettings",
+      "tabOrder",
+      "elementOverrides",
+    ];
+    const isFullSnapshot = snapshotKeys.every((key) =>
+      Object.prototype.hasOwnProperty.call(value, key)
+    );
+    const remote = normaliseLiveEditSnapshot(value);
+
+    if (isFullSnapshot) {
+      return remote;
+    }
+
+    let current = normaliseLiveEditSnapshot(null);
+
+    try {
+      const stored = JSON.parse(
+        localStorage.getItem(LIVE_EDIT_STORAGE_PREFIX + version) || "null"
+      );
+      if (stored && typeof stored === "object") {
+        current = normaliseLiveEditSnapshot(stored);
+      }
+    } catch {}
 
     return {
       tabLabels:
         value.tabLabels && typeof value.tabLabels === "object"
-          ? value.tabLabels
-          : {},
+          ? { ...current.tabLabels, ...remote.tabLabels }
+          : current.tabLabels,
       certs:
         value.certs && typeof value.certs === "object"
-          ? value.certs
-          : {},
+          ? { ...current.certs, ...remote.certs }
+          : current.certs,
       customTabs: Array.isArray(value.customTabs)
-        ? value.customTabs
-        : [],
+        ? remote.customTabs
+        : current.customTabs,
       tabSettings:
         value.tabSettings && typeof value.tabSettings === "object"
-          ? value.tabSettings
-          : {},
+          ? { ...current.tabSettings, ...remote.tabSettings }
+          : current.tabSettings,
       tabOrder: Array.isArray(value.tabOrder)
-        ? value.tabOrder
-        : [],
+        ? remote.tabOrder
+        : current.tabOrder,
       elementOverrides:
         value.elementOverrides &&
         typeof value.elementOverrides === "object"
-          ? value.elementOverrides
-          : {},
+          ? {
+              ...current.elementOverrides,
+              ...remote.elementOverrides,
+            }
+          : current.elementOverrides,
     };
   }
 
@@ -890,7 +949,10 @@
       const liveEdit = await fetchRemoteContentJson(liveEditUrl);
 
       ["STE", "NON_STE"].forEach((version) => {
-        const snapshot = authoritativeLiveEditSnapshot(liveEdit?.[version]);
+        const snapshot = liveEditSnapshotForStorage(
+          version,
+          liveEdit?.[version]
+        );
         if (!snapshot) return;
 
         localStorage.setItem(
