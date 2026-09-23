@@ -911,13 +911,20 @@
       let awardsChanged = false;
 
       ["STE", "NON_STE"].forEach((version) => {
-        const catalog = awards?.[version];
-        if (!catalog || typeof catalog !== "object") return;
+        if (!Object.prototype.hasOwnProperty.call(awards || {}, version)) {
+          return;
+        }
 
-        localStorage.setItem(
-          AWARDS_STORAGE_PREFIX + version,
-          JSON.stringify(catalog)
-        );
+        const key = AWARDS_STORAGE_PREFIX + version;
+        const catalog = awards?.[version];
+
+        if (!catalog || typeof catalog !== "object") {
+          localStorage.removeItem(key);
+          awardsChanged = true;
+          return;
+        }
+
+        localStorage.setItem(key, JSON.stringify(catalog));
         awardsChanged = true;
       });
 
