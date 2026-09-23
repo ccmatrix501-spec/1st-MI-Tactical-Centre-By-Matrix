@@ -1,1 +1,1 @@
-web v1.7.0 discord-export-railway
+web v1.8.0 desktop-sync-1.3.23 discord-activity
