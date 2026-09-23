@@ -42,9 +42,20 @@ function looksLikeDiscordActivity() {
   );
 }
 
-function loadMainApp() {
+async function loadMainApp() {
   if (mainAppLoaded) return;
   mainAppLoaded = true;
+
+  try {
+    if (window.__TACTICAL_CONTENT_BOOTSTRAP__) {
+      await window.__TACTICAL_CONTENT_BOOTSTRAP__;
+    }
+  } catch (error) {
+    console.warn(
+      "[TACTICAL CONTENT] Continuing after bootstrap sync failure:",
+      error
+    );
+  }
 
   const script = document.createElement("script");
   script.type = "module";
