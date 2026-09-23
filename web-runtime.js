@@ -797,5 +797,176 @@
     onToggleMapLayers: () => () => {},
   };
 
+  const CONTENT_MANIFEST_URL =
+    DEFAULT_API + "/tactical-centre/updates/manifest.json";
+  const CONTENT_REVISION_KEY = "ste-content-update-revision-v2";
+  const CONTENT_LAST_UPDATED_KEY = "ste-content-update-last-updated-v2";
+  const LIVE_EDIT_STORAGE_PREFIX = "ste-live-page-editor-v2:";
+  const AWARDS_STORAGE_PREFIX = "ste-merits-awards-catalog-v1:";
+
+  function resolveRemoteContentUrl(manifestUrl, value) {
+    const clean = String(value || "").trim();
+    if (!clean) return "";
+
+    try {
+      return new URL(clean, manifestUrl).toString();
+    } catch {
+      return "";
+    }
+  }
+
+  async function fetchRemoteContentJson(url) {
+    const response = await fetch(
+      url + (url.includes("?") ? "&" : "?") + "t=" + Date.now(),
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Content update request failed (" +
+          response.status +
+          ") for " +
+          url
+      );
+    }
+
+    return response.json();
+  }
+
+  function authoritativeLiveEditSnapshot(value) {
+    if (!value || typeof value !== "object") return null;
+
+    return {
+      tabLabels:
+        value.tabLabels && typeof value.tabLabels === "object"
+          ? value.tabLabels
+          : {},
+      certs:
+        value.certs && typeof value.certs === "object"
+          ? value.certs
+          : {},
+      customTabs: Array.isArray(value.customTabs)
+        ? value.customTabs
+        : [],
+      tabSettings:
+        value.tabSettings && typeof value.tabSettings === "object"
+          ? value.tabSettings
+          : {},
+      tabOrder: Array.isArray(value.tabOrder)
+        ? value.tabOrder
+        : [],
+      elementOverrides:
+        value.elementOverrides &&
+        typeof value.elementOverrides === "object"
+          ? value.elementOverrides
+          : {},
+    };
+  }
+
+  async function bootstrapSharedTacticalContent() {
+    const manifest = await fetchRemoteContentJson(CONTENT_MANIFEST_URL);
+
+    if (Number(manifest?.schemaVersion || 1) !== 1) {
+      throw new Error("Unsupported Tactical Centre update manifest.");
+    }
+
+    const revision = Number(manifest?.revision || 0);
+    if (!Number.isFinite(revision) || revision <= 0) return;
+
+    const liveEditUrl = resolveRemoteContentUrl(
+      CONTENT_MANIFEST_URL,
+      manifest?.content?.liveEdit
+    );
+    const awardsUrl = resolveRemoteContentUrl(
+      CONTENT_MANIFEST_URL,
+      manifest?.content?.awards
+    );
+    const mapsUrl = resolveRemoteContentUrl(
+      CONTENT_MANIFEST_URL,
+      manifest?.content?.maps
+    );
+
+    if (liveEditUrl) {
+      const liveEdit = await fetchRemoteContentJson(liveEditUrl);
+
+      ["STE", "NON_STE"].forEach((version) => {
+        const snapshot = authoritativeLiveEditSnapshot(liveEdit?.[version]);
+        if (!snapshot) return;
+
+        localStorage.setItem(
+          LIVE_EDIT_STORAGE_PREFIX + version,
+          JSON.stringify(snapshot)
+        );
+      });
+
+      window.dispatchEvent(
+        new CustomEvent("ste-live-page-editor-changed", {
+          detail: { remote: true, revision },
+        })
+      );
+    }
+
+    if (awardsUrl) {
+      const awards = await fetchRemoteContentJson(awardsUrl);
+      let awardsChanged = false;
+
+      ["STE", "NON_STE"].forEach((version) => {
+        const catalog = awards?.[version];
+        if (!catalog || typeof catalog !== "object") return;
+
+        localStorage.setItem(
+          AWARDS_STORAGE_PREFIX + version,
+          JSON.stringify(catalog)
+        );
+        awardsChanged = true;
+      });
+
+      if (awardsChanged) {
+        window.dispatchEvent(
+          new CustomEvent("ste-award-catalog-updated", {
+            detail: { remote: true, revision },
+          })
+        );
+      }
+    }
+
+    if (mapsUrl && window.steContent?.syncRemoteMaps) {
+      const maps = await fetchRemoteContentJson(mapsUrl);
+      const result = await window.steContent.syncRemoteMaps({
+        manifestUrl: CONTENT_MANIFEST_URL,
+        maps: Array.isArray(maps?.maps) ? maps.maps : [],
+      });
+
+      if (result && result.success === false) {
+        throw new Error(
+          result.error || "Remote map update failed."
+        );
+      }
+    }
+
+    localStorage.setItem(CONTENT_REVISION_KEY, String(revision));
+    localStorage.setItem(
+      CONTENT_LAST_UPDATED_KEY,
+      String(manifest?.updatedAt || new Date().toISOString())
+    );
+
+    window.dispatchEvent(
+      new CustomEvent("ste-remote-content-updated", {
+        detail: {
+          revision,
+          updatedAt: manifest?.updatedAt || null,
+        },
+      })
+    );
+  }
+
+  window.__TACTICAL_CONTENT_BOOTSTRAP__ =
+    bootstrapSharedTacticalContent().catch((error) => {
+      console.warn(
+        "[TACTICAL CONTENT] Browser bootstrap sync failed:",
+        error
+      );
+    });
+
   window.__TACTICAL_WEB_RUNTIME_READY__ = true;
 })();
