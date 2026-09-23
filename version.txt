@@ -1,1 +1,1 @@
-web v1.8.0 desktop-sync-1.3.23 discord-activity
+web v1.8.1 discord-routing-sync-1.3.23 discord-activity
