@@ -247,14 +247,84 @@
     });
   }
 
+  const MAP_CATEGORY_STORAGE_PREFIX =
+    "ste-map-game-categories-v1:";
+
   function normaliseVersion(value) {
     return value === "NON_STE" ? "NON_STE" : "STE";
   }
 
+  function defaultGame(value) {
+    return value === "NON_STE" ? "HLL:V" : "STE";
+  }
+
   function normaliseGame(value, appVersion) {
-    const clean = String(value || "").trim();
+    const clean = String(value || "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 60);
     if (clean) return clean;
-    return appVersion === "NON_STE" ? "HLL:V" : "STE";
+    return defaultGame(appVersion);
+  }
+
+  function mapCategoryStorageKey(appVersion) {
+    return MAP_CATEGORY_STORAGE_PREFIX + normaliseVersion(appVersion);
+  }
+
+  function storedMapCategories(appVersion) {
+    const version = normaliseVersion(appVersion);
+    const fallback = defaultGame(version);
+
+    try {
+      const parsed = JSON.parse(
+        localStorage.getItem(mapCategoryStorageKey(version)) || "[]"
+      );
+      const values = Array.isArray(parsed) ? parsed : [];
+
+      return Array.from(
+        new Set([
+          fallback,
+          ...values
+            .map((value) => normaliseGame(value, version))
+            .filter(Boolean),
+        ])
+      );
+    } catch {
+      return [fallback];
+    }
+  }
+
+  function saveMapCategories(appVersion, categories) {
+    const version = normaliseVersion(appVersion);
+    const fallback = defaultGame(version);
+    const clean = Array.from(
+      new Set([
+        fallback,
+        ...(Array.isArray(categories) ? categories : [])
+          .map((value) => normaliseGame(value, version))
+          .filter(Boolean),
+      ])
+    );
+
+    localStorage.setItem(
+      mapCategoryStorageKey(version),
+      JSON.stringify(clean)
+    );
+
+    return clean;
+  }
+
+  async function listMapCategories(appVersion) {
+    const version = normaliseVersion(appVersion);
+    const all = await dbGetAll();
+    const fromMaps = all
+      .filter((record) => normaliseVersion(record.appVersion) === version)
+      .map((record) => normaliseGame(record.game, version));
+
+    return saveMapCategories(version, [
+      ...storedMapCategories(version),
+      ...fromMaps,
+    ]).sort((a, b) => a.localeCompare(b));
   }
 
   function cleanMapId(value) {
@@ -296,6 +366,84 @@
   }
 
   window.steMaps = {
+    categories: async (appVersion) =>
+      listMapCategories(appVersion),
+
+    addCategory: async (payload = {}) => {
+      if (!currentDiscordAccess().isAdmin && window.miDiscordActivity === true) {
+        return {
+          success: false,
+          error: "Admin access is required to add map game categories.",
+        };
+      }
+
+      const appVersion = normaliseVersion(payload.appVersion);
+      const game = normaliseGame(payload.game, appVersion);
+      const categories = await listMapCategories(appVersion);
+
+      if (
+        !categories.some(
+          (item) => item.toLowerCase() === game.toLowerCase()
+        )
+      ) {
+        categories.push(game);
+      }
+
+      saveMapCategories(appVersion, categories);
+
+      return {
+        success: true,
+        game,
+        categories: await listMapCategories(appVersion),
+      };
+    },
+
+    removeCategory: async (payload = {}) => {
+      if (!currentDiscordAccess().isAdmin && window.miDiscordActivity === true) {
+        return {
+          success: false,
+          error: "Admin access is required to remove map game categories.",
+        };
+      }
+
+      const appVersion = normaliseVersion(payload.appVersion);
+      const game = normaliseGame(payload.game, appVersion);
+      const builtIn = defaultGame(appVersion);
+
+      if (game.toLowerCase() === builtIn.toLowerCase()) {
+        return {
+          success: false,
+          error: "The built-in " + builtIn + " category cannot be removed.",
+        };
+      }
+
+      const all = await dbGetAll();
+      const hasMaps = all.some(
+        (record) =>
+          normaliseVersion(record.appVersion) === appVersion &&
+          normaliseGame(record.game, appVersion).toLowerCase() ===
+            game.toLowerCase()
+      );
+
+      if (hasMaps) {
+        return {
+          success: false,
+          error: "Remove the maps in this category before deleting it.",
+        };
+      }
+
+      const categories = (await listMapCategories(appVersion)).filter(
+        (item) => item.toLowerCase() !== game.toLowerCase()
+      );
+
+      saveMapCategories(appVersion, categories);
+
+      return {
+        success: true,
+        categories: await listMapCategories(appVersion),
+      };
+    },
+
     list: async (filter = {}) => {
       const version = normaliseVersion(filter.appVersion);
       const game = normaliseGame(filter.game, version);
@@ -341,6 +489,10 @@
       }
 
       await dbPut(record);
+      saveMapCategories(appVersion, [
+        ...(await listMapCategories(appVersion)),
+        game,
+      ]);
 
       return {
         success: true,
@@ -517,6 +669,10 @@
       };
 
       await dbPut(record);
+      saveMapCategories(appVersion, [
+        ...(await listMapCategories(appVersion)),
+        game,
+      ]);
       remoteById.set(remoteId, record);
       downloaded += 1;
     }
@@ -669,7 +825,15 @@
               "X-Tactical-Map-Name": encodeURIComponent(
                 String(payload.name || id)
               ),
-              "X-Tactical-Map-Game": String(payload.game || "STE"),
+              "X-Tactical-Map-Game": encodeURIComponent(
+                normaliseGame(
+                  payload.game,
+                  normaliseVersion(payload.appVersion)
+                )
+              ),
+              "X-Tactical-Map-App-Version": normaliseVersion(
+                payload.appVersion
+              ),
               "X-Tactical-File-Name": encodeURIComponent(
                 String(payload.fileName || id + ".png")
               ),
@@ -923,6 +1087,12 @@
   }
 
   async function bootstrapSharedTacticalContent() {
+    if (
+      localStorage.getItem("ste-live-page-editor-mode") === "true"
+    ) {
+      return;
+    }
+
     const manifest = await fetchRemoteContentJson(CONTENT_MANIFEST_URL);
 
     if (Number(manifest?.schemaVersion || 1) !== 1) {
