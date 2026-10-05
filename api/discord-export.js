@@ -35,6 +35,48 @@ const CHANNEL_ROLE_PINGS = {
   ]
 };
 
+const BUILD_CERT_ROLE_NAMES = [
+  "[DS] Division Staff",
+  "Division Staff",
+  "[DC] Division Command",
+  "Hell Hounds CO",
+  "Hell Hounds XO",
+  "Hell Hounds Senior Sergeant"
+];
+
+function isBuildCertification(payload) {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
+  const info = payload.info && typeof payload.info === "object" ? payload.info : {};
+  const values = [
+    payload.certificationType,
+    payload.saveType,
+    payload.type,
+    payload.title,
+    payload.name,
+    info["Certification Type"],
+    info["Certification"],
+    info["Type"],
+    info["Title"]
+  ]
+    .filter((value) => value !== undefined && value !== null)
+    .map((value) => String(value).trim().toLowerCase());
+
+  return values.some((value) =>
+    value.includes("build certification") ||
+    value.includes("builder certification") ||
+    (/\bbuild(?:er)?\b/.test(value) && /\bcert(?:ification)?\b/.test(value))
+  );
+}
+
+function roleIdsForExactNames(roles, names) {
+  const byName = new Map(
+    (Array.isArray(roles) ? roles : []).map((role) => [String(role?.name || "").trim(), String(role?.id || "")])
+  );
+  return (Array.isArray(names) ? names : [])
+    .map((name) => byName.get(String(name)))
+    .filter((id) => /^\d{16,22}$/.test(String(id || "")));
+}
+
 function rolesForDestination(parentChannelId) {
   const key = String(parentChannelId || "");
   const list = CHANNEL_ROLE_PINGS[key];
@@ -255,7 +297,11 @@ export default async function handler(req, res) {
   const parentIdForRoles = isThread
     ? String(destinationRes.data?.parent_id || permissionChannel?.id || "")
     : String(destinationId);
-  const pingRoleIds = rolesForDestination(parentIdForRoles);
+  const destinationRoleIds = rolesForDestination(parentIdForRoles);
+  const buildCertRoleIds = isBuildCertification(payload)
+    ? roleIdsForExactNames(roles, BUILD_CERT_ROLE_NAMES)
+    : [];
+  const pingRoleIds = [...new Set([...destinationRoleIds, ...buildCertRoleIds])];
   const roleMentions = pingRoleIds.map((id) => `<@&${id}>`).join(" ");
   const userMessage = clipMessage(message);
 
