@@ -1,0 +1,294 @@
+/* 1st M.I. compact layout — last-wins, correct cert section order */
+html.mi-compact, html.mi-compact body, html.mi-compact #root {
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+html.mi-compact .app {
+  height: auto !important;
+  min-height: 100dvh !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+html.mi-compact .app-body {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 8px 8px 96px !important;
+}
+html.mi-compact .topbar,
+html.mi-compact header.topbar {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  position: relative !important;
+  gap: 8px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 8px 10px 10px !important;
+}
+html.mi-compact .brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding-right: 108px !important;
+  overflow: hidden !important;
+}
+html.mi-compact .brand h1 {
+  font-size: 13px !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+html.mi-compact .brand p { display: block !important; font-size: 10px !important; }
+html.mi-compact .header-actions {
+  position: absolute !important;
+  top: 8px !important;
+  right: 10px !important;
+}
+html.mi-compact .header-actions .btn {
+  min-height: 40px !important;
+  white-space: nowrap !important;
+}
+html.mi-compact .tabs,
+html.mi-compact .header-tabs,
+html.mi-compact nav.tabs {
+  display: flex !important;
+  width: 100% !important;
+  flex: 0 0 auto !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  flex-wrap: nowrap !important;
+  gap: 6px !important;
+}
+html.mi-compact .tabs .btn,
+html.mi-compact .header-tabs button,
+html.mi-compact .header-tabs .btn,
+html.mi-compact .tab-button {
+  flex: 0 0 auto !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  min-height: 40px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+}
+html.mi-compact .two-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  grid-template-columns: 1fr !important;
+  height: auto !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  gap: 12px !important;
+}
+html.mi-compact .two-panel > aside,
+html.mi-compact .two-panel > main {
+  display: contents !important;
+}
+html.mi-compact .two-panel > aside > .card:first-of-type { order: 1 !important; }
+html.mi-compact .two-panel > main > * { order: 2 !important; }
+html.mi-compact .two-panel > aside > .card:not(:first-of-type) { order: 3 !important; }
+html.mi-compact .two-panel > aside > .card,
+html.mi-compact .two-panel > main > * {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+}
+html.mi-compact .two-panel .grid-two {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  gap: 12px !important;
+}
+html.mi-compact .two-panel .grid-two > * {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+html.mi-compact .cert-sub-tabs {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+html.mi-compact .mi3d-apemap-shell,
+html.mi-compact .mi3d-shell,
+html.mi-compact .stratmap-body {
+  display: flex !important;
+  flex-direction: column !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  grid-template-columns: 1fr !important;
+  position: relative !important;
+}
+html.mi-compact .mi3d-apemap-view {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: 42vh !important;
+  min-height: 220px !important;
+  order: 1 !important;
+}
+html.mi-compact .mi3d-canvas,
+html.mi-compact .mi3d-canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+html.mi-compact .mi3d-left-panel,
+html.mi-compact .mi3d-zone-list-panel,
+html.mi-compact .mi3d-summary-panel,
+html.mi-compact .mi3d-panel,
+html.mi-compact .stratmap-left,
+html.mi-compact .stratmap-right,
+html.mi-compact .stratmap-main {
+  position: relative !important;
+  top: auto !important; left: auto !important;
+  right: auto !important; bottom: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  inset: auto !important;
+  order: 2 !important;
+  margin: 8px 0 !important;
+}
+html.mi-compact .mi3d-bottom-toolbar,
+html.mi-compact .mi3d-selected-readout,
+html.mi-compact .mi3d-help {
+  position: relative !important;
+  left: auto !important; right: auto !important;
+  bottom: auto !important; top: auto !important;
+  width: 100% !important;
+  order: 3 !important;
+}
+html.mi-compact .mi3d-apemap-logo {
+  position: relative !important;
+  top: auto !important; left: auto !important;
+  padding: 8px 10px 0 !important;
+}
+html.mi-compact input,
+html.mi-compact select,
+html.mi-compact textarea {
+  font-size: 16px !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+html.mi-compact .modal-box,
+html.mi-compact .driller-requirements-popup,
+html.mi-compact .restriction-map-popup,
+html.mi-compact .help-card {
+  width: min(96vw, 560px) !important;
+  max-width: 96vw !important;
+  max-height: 88vh !important;
+  overflow-y: auto !important;
+}
+
+
+/* Mobile hardening shared by web + Discord Activity */
+html.mi-compact,
+html.mi-compact body,
+html.mi-compact #root,
+html.mi-compact .app {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+html.mi-compact body {
+  padding-top: env(safe-area-inset-top) !important;
+  padding-left: env(safe-area-inset-left) !important;
+  padding-right: env(safe-area-inset-right) !important;
+}
+html.mi-compact .app-header {
+  height: auto !important;
+  min-height: 48px !important;
+  max-width: 100% !important;
+  padding: 6px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+html.mi-compact .app-header > * {
+  flex: 0 0 auto !important;
+}
+html.mi-compact .toolbar {
+  height: auto !important;
+  min-height: 52px !important;
+  max-width: 100% !important;
+  padding: 6px 8px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  flex-wrap: nowrap !important;
+  -webkit-overflow-scrolling: touch;
+}
+html.mi-compact .toolbar .btn,
+html.mi-compact .btn,
+html.mi-compact button {
+  min-height: 42px !important;
+}
+html.mi-compact .map-page,
+html.mi-compact .settings-page,
+html.mi-compact .scroll-page {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+html.mi-compact .map-grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  padding: 8px !important;
+}
+html.mi-compact .map-canvas {
+  width: 100% !important;
+  min-height: 280px !important;
+  height: min(58dvh, 620px) !important;
+  max-height: 70dvh !important;
+}
+html.mi-compact .map-image {
+  object-fit: contain !important;
+}
+html.mi-compact .resource-row {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+}
+html.mi-compact .card,
+html.mi-compact .settings-panel {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+html.mi-compact .dropdown-menu {
+  max-width: calc(100vw - 24px) !important;
+}
+html.mi-compact .modal-backdrop {
+  padding:
+    max(12px, env(safe-area-inset-top))
+    max(12px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left)) !important;
+}
+html.mi-compact .modal-box {
+  width: min(96vw, 560px) !important;
+  max-width: 96vw !important;
+}
+html.mi-compact .bottom-credit,
+html.mi-compact .corner-controls {
+  max-width: calc(100vw - 16px) !important;
+}
