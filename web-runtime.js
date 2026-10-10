@@ -137,6 +137,15 @@
     };
 
     window.miWebAccess = state;
+
+    if (state.valid) {
+      window.dispatchEvent(
+        new CustomEvent("mi-web-access-ready", {
+          detail: state,
+        })
+      );
+    }
+
     return state;
   }
 
