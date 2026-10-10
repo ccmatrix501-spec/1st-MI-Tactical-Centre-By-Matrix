@@ -389,12 +389,38 @@ const isActivity = looksLikeDiscordActivity();
 if (!isActivity) {
   window.miDiscordActivity = false;
   window.miDiscordActivityBuild = ACTIVITY_BUILD;
-  window.miDiscordReady = Promise.resolve({
-    activity: false,
-    allowed: true
-  });
 
-  loadMainApp();
+  async function openWebAfterBotAccess() {
+    const status = await window.steAccess?.getStatus?.().catch?.(() => null);
+
+    if (status?.valid || status?.activated) {
+      await loadMainApp();
+      return true;
+    }
+
+    return false;
+  }
+
+  window.miDiscordReady = openWebAfterBotAccess()
+    .then((allowed) => ({
+      activity: false,
+      allowed: Boolean(allowed),
+      provider: "discord-bot-web"
+    }))
+    .catch((error) => ({
+      activity: false,
+      allowed: false,
+      provider: "discord-bot-web",
+      error: error?.message || String(error)
+    }));
+
+  window.addEventListener(
+    "mi-web-access-ready",
+    () => {
+      void loadMainApp();
+    },
+    { once: true }
+  );
 } else {
   document.documentElement.classList.add("discord-activity");
 
