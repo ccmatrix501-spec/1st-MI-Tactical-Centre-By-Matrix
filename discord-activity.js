@@ -391,7 +391,15 @@ if (!isActivity) {
   window.miDiscordActivityBuild = ACTIVITY_BUILD;
 
   async function openWebAfterBotAccess() {
-    const status = await window.steAccess?.getStatus?.().catch?.(() => null);
+    let status = null;
+
+    try {
+      if (window.steAccess?.getStatus) {
+        status = await window.steAccess.getStatus();
+      }
+    } catch (error) {
+      console.warn("[TACTICAL WEB ACCESS] Initial key validation failed:", error);
+    }
 
     if (status?.valid || status?.activated) {
       await loadMainApp();
