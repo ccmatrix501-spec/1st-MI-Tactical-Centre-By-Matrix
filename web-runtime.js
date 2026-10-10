@@ -49,6 +49,126 @@
     };
   }
 
+  const WEB_ACCESS_KEY_STORAGE = "mi-tactical-web-access-key-v1";
+  const WEB_DEVICE_ID_STORAGE = "mi-tactical-web-device-id-v1";
+
+  function looksLikeDiscordActivityContext() {
+    const hostname = String(window.location.hostname || "").toLowerCase();
+    const referrer = String(document.referrer || "").toLowerCase();
+    const params = new URLSearchParams(window.location.search || "");
+
+    return Boolean(
+      params.get("instance_id") ||
+      params.get("frame_id") ||
+      params.get("channel_id") ||
+      params.get("guild_id") ||
+      hostname === "discordsays.com" ||
+      hostname.endsWith(".discordsays.com") ||
+      referrer.includes("discord.com") ||
+      referrer.includes("discordapp.com") ||
+      window.parent !== window
+    );
+  }
+
+  function browserDeviceId() {
+    try {
+      let value = String(localStorage.getItem(WEB_DEVICE_ID_STORAGE) || "").trim();
+      if (value) return value;
+
+      if (window.crypto?.randomUUID) {
+        value = "web-" + window.crypto.randomUUID();
+      } else {
+        value =
+          "web-" +
+          Date.now().toString(36) +
+          "-" +
+          Math.random().toString(36).slice(2) +
+          Math.random().toString(36).slice(2);
+      }
+
+      localStorage.setItem(WEB_DEVICE_ID_STORAGE, value);
+      return value;
+    } catch {
+      return (
+        "web-session-" +
+        Date.now().toString(36) +
+        "-" +
+        Math.random().toString(36).slice(2)
+      );
+    }
+  }
+
+  function savedWebAccessKey() {
+    try {
+      return String(localStorage.getItem(WEB_ACCESS_KEY_STORAGE) || "")
+        .trim()
+        .toUpperCase();
+    } catch {
+      return "";
+    }
+  }
+
+  function normaliseAccessKey(value) {
+    const raw =
+      value && typeof value === "object" && "key" in value
+        ? value.key
+        : value;
+
+    return String(raw || "")
+      .trim()
+      .toUpperCase()
+      .replace(/\s+/g, "");
+  }
+
+  function setWebAccessState(result = {}) {
+    const state = {
+      success: Boolean(result.valid || result.activated),
+      activated: Boolean(result.valid || result.activated),
+      valid: Boolean(result.valid || result.activated),
+      provider: "discord-bot-web",
+      isAdmin: Boolean(result.isAdmin),
+      fullAccess: Boolean(result.fullAccess),
+      discordUserId: String(result.discordUserId || ""),
+      expiresAt: result.expiresAt || null,
+      machineLimit: Number(result.machineLimit || 0),
+      machineCount: Number(result.machineCount || 0),
+      offline: false,
+      error: result.error || "",
+    };
+
+    window.miWebAccess = state;
+    return state;
+  }
+
+  function currentWebAccess() {
+    const access = window.miWebAccess;
+
+    if (access?.valid) {
+      return {
+        ...access,
+        success: true,
+        activated: true,
+        valid: true,
+        provider: "discord-bot-web",
+      };
+    }
+
+    return {
+      success: false,
+      activated: false,
+      valid: false,
+      provider: "discord-bot-web",
+      isAdmin: false,
+      fullAccess: false,
+      discordUserId: "",
+      expiresAt: null,
+      offline: false,
+      error:
+        String(access?.error || "") ||
+        "Enter the personal Tactical Centre access key issued by the 1st M.I. bot.",
+    };
+  }
+
   function currentDiscordAccess() {
     const access = window.miDiscordAccess;
 
@@ -59,14 +179,17 @@
         valid: true,
         provider: "discord-activity",
         isAdmin: Boolean(access.isAdmin),
-        discordUserId: String(access.userId || ""),
+        discordUserId: String(access.userId || access.discordUserId || ""),
         expiresAt: "",
         offline: false,
         guildId: String(access.guildId || ""),
       };
     }
 
-    if (window.miDiscordActivity === true) {
+    if (
+      window.miDiscordActivity === true ||
+      looksLikeDiscordActivityContext()
+    ) {
       return {
         success: false,
         activated: false,
@@ -80,26 +203,288 @@
       };
     }
 
+    return currentWebAccess();
+  }
+
+  async function requestWebAccess(action, key) {
+    const cleanKey = normaliseAccessKey(key);
+
+    if (!cleanKey) {
+      return {
+        success: false,
+        valid: false,
+        activated: false,
+        provider: "discord-bot-web",
+        error: "Enter your Tactical Centre access key.",
+      };
+    }
+
+    try {
+      return await fetchJson(apiBase() + "/app-access/" + action, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          key: cleanKey,
+          machineId: browserDeviceId(),
+          clientType: "web",
+        }),
+      });
+    } catch (error) {
+      return {
+        success: false,
+        valid: false,
+        activated: false,
+        provider: "discord-bot-web",
+        error:
+          error?.message ||
+          "Could not reach the Tactical Centre access service.",
+      };
+    }
+  }
+
+  async function getWebAccessStatus() {
+    if (looksLikeDiscordActivityContext()) {
+      return currentDiscordAccess();
+    }
+
+    const key = savedWebAccessKey();
+
+    if (!key) {
+      return setWebAccessState({
+        valid: false,
+        error:
+          "Enter the personal Tactical Centre access key issued by the 1st M.I. bot.",
+      });
+    }
+
+    const result = await requestWebAccess("validate", key);
+
+    if (result?.valid) {
+      return setWebAccessState(result);
+    }
+
+    return setWebAccessState({
+      ...result,
+      valid: false,
+      error:
+        result?.error ||
+        "This Tactical Centre web access key is not valid.",
+    });
+  }
+
+  async function activateWebAccess(value) {
+    if (looksLikeDiscordActivityContext()) {
+      return currentDiscordAccess();
+    }
+
+    const key = normaliseAccessKey(value);
+    const result = await requestWebAccess("activate", key);
+
+    if (!result?.valid) {
+      return setWebAccessState({
+        ...result,
+        valid: false,
+        error:
+          result?.error ||
+          "This Tactical Centre web access key could not be activated.",
+      });
+    }
+
+    try {
+      localStorage.setItem(WEB_ACCESS_KEY_STORAGE, key);
+    } catch {}
+
+    return setWebAccessState(result);
+  }
+
+  async function clearWebAccess() {
+    if (looksLikeDiscordActivityContext()) {
+      return currentDiscordAccess();
+    }
+
+    try {
+      localStorage.removeItem(WEB_ACCESS_KEY_STORAGE);
+    } catch {}
+
+    window.miWebAccess = null;
+
     return {
       success: true,
-      activated: true,
-      valid: true,
-      provider: "web",
+      activated: false,
+      valid: false,
+      provider: "discord-bot-web",
       isAdmin: false,
-      discordUserId: "",
-      expiresAt: "",
-      offline: false,
     };
   }
 
   window.steAccess = {
-    getStatus: async () => currentDiscordAccess(),
-    activate: async () => currentDiscordAccess(),
-    clear: async () => ({
-      success: true,
-      ...currentDiscordAccess(),
-    }),
+    getStatus: async () => getWebAccessStatus(),
+    activate: async (value) => activateWebAccess(value),
+    clear: async () => clearWebAccess(),
   };
+
+  // Keep the browser adapter compatible with source builds that expect
+  // the Electron-style steLicense name. Discord Activity overwrites this
+  // with its own Discord-account access shim during Activity startup.
+  window.steLicense = window.steAccess;
+
+  function ensureWebAccessGate() {
+    if (looksLikeDiscordActivityContext()) return null;
+
+    let gate = document.getElementById("tactical-web-access-gate");
+    if (gate) return gate;
+
+    gate = document.createElement("div");
+    gate.id = "tactical-web-access-gate";
+    gate.style.cssText = [
+      "position:fixed",
+      "inset:0",
+      "z-index:2147483647",
+      "display:flex",
+      "align-items:center",
+      "justify-content:center",
+      "padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))",
+      "background:#050607",
+      "color:#fff",
+      "font-family:Arial,Helvetica,sans-serif",
+      "overflow:auto",
+    ].join(";");
+
+    gate.innerHTML =
+      '<form id="tactical-web-access-form" style="width:min(520px,100%);padding:22px;' +
+      'border:1px solid #31383d;border-radius:14px;background:#0b1013;' +
+      'box-shadow:0 20px 70px rgba(0,0,0,.55)">' +
+      '<div style="font-size:12px;letter-spacing:2px;color:#20ff00;font-weight:900;' +
+      'margin-bottom:10px">1ST M.I. TACTICAL CENTRE</div>' +
+      '<h1 style="font-size:24px;line-height:1.2;margin:0 0 8px">Web access key</h1>' +
+      '<p style="margin:0 0 18px;color:#aab4ba;line-height:1.5;font-size:14px">' +
+      'Enter the personal key sent to you by the 1st M.I. Discord bot. ' +
+      'The Discord Activity version does not use this key.</p>' +
+      '<label for="tactical-web-access-key" style="display:block;font-size:12px;' +
+      'font-weight:800;color:#c8d0d5;margin-bottom:6px">ACCESS KEY</label>' +
+      '<input id="tactical-web-access-key" name="accessKey" type="password" autocomplete="current-password" ' +
+      'inputmode="text" autocapitalize="characters" spellcheck="false" ' +
+      'placeholder="XXXX-XXXX-XXXX-XXXX" style="width:100%;min-height:46px;box-sizing:border-box;' +
+      'border:1px solid #3a444a;border-radius:8px;background:#050607;color:#fff;padding:10px 12px;' +
+      'font-size:16px;letter-spacing:1px;outline:none" />' +
+      '<button id="tactical-web-access-submit" type="submit" style="width:100%;min-height:46px;' +
+      'margin-top:12px;border:1px solid #20ff00;border-radius:8px;background:#102012;' +
+      'color:#20ff00;font-weight:900;font-size:14px;cursor:pointer">Unlock Tactical Centre</button>' +
+      '<div id="tactical-web-access-message" role="status" aria-live="polite" style="min-height:20px;' +
+      'margin-top:12px;color:#aab4ba;font-size:13px;line-height:1.45"></div>' +
+      '</form>';
+
+    document.body.appendChild(gate);
+
+    const form = document.getElementById("tactical-web-access-form");
+    const input = document.getElementById("tactical-web-access-key");
+    const button = document.getElementById("tactical-web-access-submit");
+    const message = document.getElementById("tactical-web-access-message");
+
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const key = normaliseAccessKey(input?.value || "");
+      if (!key) {
+        if (message) {
+          message.textContent = "Enter the key the bot sent you.";
+          message.style.color = "#ffb347";
+        }
+        input?.focus();
+        return;
+      }
+
+      if (button) {
+        button.disabled = true;
+        button.textContent = "Checking key…";
+      }
+      if (message) {
+        message.textContent = "Verifying access with the 1st M.I. bot…";
+        message.style.color = "#aab4ba";
+      }
+
+      const result = await activateWebAccess(key);
+
+      if (result?.valid) {
+        if (message) {
+          message.textContent = "Access verified. Opening Tactical Centre…";
+          message.style.color = "#20ff00";
+        }
+        setTimeout(() => gate.remove(), 120);
+        return;
+      }
+
+      if (message) {
+        message.textContent =
+          result?.error || "That access key could not be verified.";
+        message.style.color = "#ff6b6b";
+      }
+      if (button) {
+        button.disabled = false;
+        button.textContent = "Unlock Tactical Centre";
+      }
+      input?.focus();
+      input?.select();
+    });
+
+    return gate;
+  }
+
+  async function bootstrapWebAccessGate() {
+    if (looksLikeDiscordActivityContext()) return;
+
+    const gate = ensureWebAccessGate();
+    const message = document.getElementById("tactical-web-access-message");
+    const button = document.getElementById("tactical-web-access-submit");
+
+    const key = savedWebAccessKey();
+    if (!key) {
+      if (message) {
+        message.textContent = "Waiting for your bot-issued access key.";
+      }
+      return;
+    }
+
+    if (message) {
+      message.textContent = "Checking saved web access…";
+    }
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Checking saved access…";
+    }
+
+    const result = await getWebAccessStatus();
+
+    if (result?.valid) {
+      gate?.remove();
+      return;
+    }
+
+    if (message) {
+      message.textContent =
+        result?.error ||
+        "Your saved access is no longer valid. Enter a current bot-issued key.";
+      message.style.color = "#ff6b6b";
+    }
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Unlock Tactical Centre";
+    }
+  }
+
+  if (!looksLikeDiscordActivityContext()) {
+    if (document.body) {
+      void bootstrapWebAccessGate();
+    } else {
+      window.addEventListener(
+        "DOMContentLoaded",
+        () => void bootstrapWebAccessGate(),
+        { once: true }
+      );
+    }
+  }
 
   window.steDiscordBot = {
     getBaseUrl: async () => ({
